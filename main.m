@@ -1,6 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %   Assignment 3 -- Dynamic Optimization
-%   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clc; clear all; close all;
@@ -15,7 +14,7 @@ yd = 0;    % [m/s]
 xdd = 0;   % [m/s^2]
 ydd = 0;   % [m/s^2]
 
-% initialize limp
+% Initialize limp
 limp.plan = Parameters('plan001');  % read footstep plan
 limp.x = [];
 limp.y = [];

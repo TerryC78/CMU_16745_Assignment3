@@ -1,5 +1,5 @@
 function [x, y, xd, yd, u_x, u_y, out] = processData(Sx, Sy, Sxd, Syd, Su_x, Su_y, i, out)
-%UNTITLED Summary of this function goes here
+%processData Summary of this function goes here
 %   Detailed explanation goes here
 
     [c1, c2] = size(Sx.Data);
