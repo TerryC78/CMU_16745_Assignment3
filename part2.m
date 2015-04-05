@@ -24,4 +24,29 @@ mean_x_d = mean(x_d); % the average velocity
 constant_vel = sum((x_d - mean_x_d).^2); % do I need to consider 0 velocities at start and end?
 
 % (2) Keep the sideway oscillations going
-% TODO: How to relate oscillations to timings?
+midpoint = zeros(1, nSteps-1);
+for i = 1:(nSteps-1)
+    midpoint(i) = 0.5 * (p_y(i) + p_y(i+1));
+end
+sideway_oscillation = sum((p_y(1:(nSteps-1)) - midpoint).^2);
+
+% (3) Keep step size reasonable: constraint on p_x
+footstep_size = zeros(1, nSteps-1);
+for i = 2:nSteps
+    footstep_size(i-1) = p_x(i) - p_x(i-1);
+end
+% Set constraint: footstep_size <= 1 (parameter) >= 0
+% Minimize the variance also
+footstep_var = var(footstep_size);
+
+% (4) Penalty on swing
+num_swings = floor(nSteps / 3);
+swing_distance_right = zeros(1, num_swings);
+swing_distance_left = zeros(1, num_swings);
+for i = 2:(nSteps-1)
+    
+end
+
+
+
+
