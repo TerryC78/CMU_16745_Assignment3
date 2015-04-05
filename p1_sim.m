@@ -1,4 +1,4 @@
-function [x, y, xd, yd] = p1_sim(g_z, ts, p_x, p_y, u_x, u_y)
+function [x, y, xd, yd] = p1_sim(g_z, ts, t_foot, p_x, p_y, u_x, u_y)
 % g_z : G/z (constant)
 % ts : timestamps of samples (column vector)
 % p_x, p_y, u_x, u_y : (column vectors, sampled at t)
@@ -7,8 +7,8 @@ function [x, y, xd, yd] = p1_sim(g_z, ts, p_x, p_y, u_x, u_y)
 % ODE (state-space form)
 % s = [x;y;xd;yd]
 function sd = f(t, s)
-    p_x_t = zoh(ts, p_x, t);
-    p_y_t = zoh(ts, p_y, t);
+    p_x_t = zoh(t_foot, p_x, t);
+    p_y_t = zoh(t_foot, p_y, t);
     u_x_t = interp1(ts, u_x, t);
     u_y_t = interp1(ts, u_y, t);
     sd = zeros(4, 1);
