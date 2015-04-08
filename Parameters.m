@@ -1,6 +1,7 @@
 function [ plan ] = Parameters( fname )
-%Parameters Summary of this function goes here
-%   Detailed explanation goes here
+%Parameters Retrieves footstep plan parameters from input filename.
+%   fname: input filename
+%   plan: struct containing plan parameters
 
     tmp = load(fname);
     plan.time = tmp(:, 1);

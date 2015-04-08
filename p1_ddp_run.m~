@@ -6,10 +6,10 @@ n = 2000; % total number of subdivisions
 
 %%
 t_max = sum(plan.time); % duration of the whole plan
-dt = t_max/n; % duration of a subdivision
-ts = 0:dt:t_max; % sequence of subdivisions
-p_x = plan.p_x; p_x = [p_x;p_x(end)]; % foot location in the x-direction
-p_y = plan.p_y; p_y = [p_y;p_y(end)]; % foot location in the y-direction
+dt = t_max/n; % duration of a 
+ts = 0:dt:t_max;
+p_x = plan.p_x; p_x = [p_x;p_x(end)];
+p_y = plan.p_y; p_y = [p_y;p_y(end)];
 t_foot = [0;cumsum(plan.time)];
 p_x_u = zoh(t_foot, p_x, ts);
 p_y_u = zoh(t_foot, p_y, ts);
