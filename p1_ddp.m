@@ -12,6 +12,7 @@ k_u = param.k_u;
 %   continuous : t = 0 to t_max
 %   discrete : i = 1:n+1
 %   relationship : t = (i-1)*dt, dt = t_max/n
+
 t_max = sum(plan.time);
 dt = t_max/n;
 ts = (0:dt:t_max).';
@@ -27,6 +28,7 @@ p_y_u = zoh(t_foot, p_y, ts);
 %   x_ddp = [x; xd]  (nx = 2)
 %   u_ddp = ux       (nu = 1)
 % use closure to generate F/L funcs for DDP
+
 dv = g_z*dt;
 FA = [1, dt; dv, 1];
 FB = [0; dv];
@@ -69,5 +71,4 @@ vars = struct ...
     , 'xd', x(2, :), 'yd', y(2, :) ...
     , 'u_x', u_x, 'u_y', u_y ...
     );
-
 end
