@@ -1,7 +1,7 @@
 plan = Parameters('plan001');
-param = struct('k_u', 30, 'rate', 1, 'utol', 1e-9, 'iter', 1e6);
+param = struct('k_u', 50, 'rate', 1, 'utol', 1e-12, 'iter', 1e6);
 g_z = 9.8;
-n = 1000;
+n = 2000;
 [score, vars] = p1_ddp(plan, g_z, n, param);
 
 %%
