@@ -1,5 +1,5 @@
 function [score, x, u] = ddp_naive(n, x1, u, F, L, param)
-% simple trajectory DDP
+% Simple trajectory DDP
 %   x(:, i = 1:n+1) : nx*1 column vector, system state at timestep i
 %     x(:, 1) === x1
 %   u(:, i = 1:n  ) : nu*1 column vector, control input at timestep i
@@ -10,7 +10,7 @@ function [score, x, u] = ddp_naive(n, x1, u, F, L, param)
 % F/L : single step dynamics/cost
 %   (i, x, u) -> (#, #x, #u, #xx, #ux, #uu)
 %     i.e. value, gradient, hessian
-
+%
 % param :
 %   rate: learning rate (0 < rate <= 1)
 %   utol: terminate when |change of u(1)|^2 < utol
