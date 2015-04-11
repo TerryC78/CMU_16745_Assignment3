@@ -15,19 +15,28 @@ p_x_u = zoh(t_foot, p_x, ts);
 p_y_u = zoh(t_foot, p_y, ts);
 
 %%
-figure;
+optim_trajec_x = figure;
 plot ...
     ( ts, p_x_u, 'b-' ...
     , ts, p_x_u - [vars.u_x.';0], 'c-' ...
     , ts, vars.x, 'r-' ...
     );
 legend('foot', 'COP', 'COM', 'Location', 'SE');
+xlabel('Time (s)'); ylabel('Distance (m)');
+title('Optimal trajectories in the X-axis');
+filename = './figures/optim_trajec_x.png';
+saveas(optim_trajec_x, filename);
 
-figure;
+optim_trajec_y = figure;
 plot ...
     ( ts, p_y_u, 'b-' ...
     , ts, p_y_u - [vars.u_y.';0], 'c-' ...
     , ts, vars.y, 'r-' ...
     );
 legend('foot', 'COP', 'COM', 'Location', 'SE');
+xlabel('Time (s)'); ylabel('Distance (m)');
+title('Optimal trajectories in the Y-axis');
+filename = './figures/optim_trajec_y.png';
+saveas(optim_trajec_y, filename);
+
 % TODO: add more plots
