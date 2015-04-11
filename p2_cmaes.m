@@ -6,8 +6,10 @@ function [score, vars] = p2_cmaes(plan, g_z, n, param)
 %   k_u : cost coeff for control input
 %   k_d : cost coeff for swing stride
 %   rate, utol, iter : see `ddp_naive`
+%   bound: max relative deviation of footstep timing
 
 k_d = param.k_d;
+bound = param.bound;
 m = length(plan.time);
 
 % swing stride for each step
@@ -39,7 +41,18 @@ stride(stride_z) = min(stride(stride_nz));
 % score function : DDP (done in part 1)
 function score = f(t)
     plan.time = t;
-    [score, vars] = p1_ddp(plan, g_z, n, param) + k_d*sum(stride./(t.*t));
+    score = p1_ddp(plan, g_z, n, param);
+    score = score + k_d*sum(stride./(t.*t));
 end
+
+opts = cmaes('defaults');
+t0 = plan.time;
+opts.LBounds = t0*(1-bound);
+opts.UBounds = t0*(1+bound);
+
+t = cmaes(@f, plan.time, t0*bound, opts);
+plan.time = t;
+[score, vars] = p1_ddp(plan, g_z, n, param);
+vars.time = t;
 
 end
