@@ -6,6 +6,24 @@ function [score, vars] = p2_ddp(plan, g, n, param)
 %   k_u : cost coeff for control input
 %   k_d : cost coeff for swing stride
 %   rate, utol, iter : see `ddp_naive`
+%   bound: max relative deviation of footstep timing
+
+
+% call `p1_ddp` for initial guess
+% NOTE: `n` and therefore time subdivision is handled differently:
+%   p1 : divide over whole plan
+%   p2 : divide over single step
+% interpolation is needed to bridge the outputs
+t0_max = sum(plan.time);
+dt_min = min(plan.time);
+n0 = ceil(t0_max/dt_min*n);
+dt0 = t0_max/n0;
+ts0 = 0:dt0:t0_max; ts0 = ts0(1:end-1);
+ts1 = p2_ddp_ts(plan.time, n).';
+[~, vars0] = p1_ddp(plan, g, n0, param);
+u0_x = interp1(ts0, vars0.u_x, ts1, 'spline');
+u0_y = interp1(ts0, vars0.u_y, ts1, 'spline');
+
 
 % i = 1 (mod n+1) => start a footstep
 % otherwise       => move a timestep
@@ -15,6 +33,7 @@ q = nn*m;
 
 k_u = param.k_u;
 k_d = param.k_d;
+bound = param.bound;
 
 % foot position
 p_x = plan.p_x;
@@ -115,6 +134,7 @@ function [Lval, Lx, Lu, Lxx, Lux, Luu] = L(i, x, u)
     
     if i_step == 1
         % start a footstep
+        fprintf('foot=%2d t=%.5f\n', i_foot, u(1)*n);
         stride_i = stride(i_foot);
         ti = 1/(n*u(1)); % dt inverse
         t2i = ti*ti; % dt^2 inverse
@@ -123,10 +143,12 @@ function [Lval, Lx, Lu, Lxx, Lux, Luu] = L(i, x, u)
         
         Lval = k_d*stride_i*t2i;
         Lx = zeros(1, 5);
-        Lu = -2*k_d*stride_i*t3i*[1 1];
+        % Lu = -2*k_d*stride_i*t3i*[1 1];
+        Lu = [-2*k_d*stride_i*t3i 1e-3];
         Lxx = zeros(5, 5);
         Lux = zeros(2, 5);
-        Luu = 6*k_d*stride_i*t4i*eye(2);
+        % Luu = 6*k_d*stride_i*t4i*eye(2);
+        Luu = [6*k_d*stride_i*t4i 0; 0 0] + 1e-3*eye(2);
     else
         % move a timestep
         xx = x(1); xxd = x(2);
@@ -160,9 +182,19 @@ function [Lval, Lx, Lu, Lxx, Lux, Luu] = L(i, x, u)
 end
 
 x1 = [p_x(1); 0; p_y(1); 0; 0];
-u = zeros(2, q);
-ui_f = 1:nn:q; % indices of footsteps
-u(1, ui_f) = plan.time/n;
+
+u = [u0_x;u0_y];
+umin = -Inf*ones(2, q);
+umax = +Inf*ones(2, q);
+
+ui_f = 1:nn:q; % indices of footstep transitions
+dt1 = plan.time/n;
+u(1, ui_f) = dt1;
+umin(1, ui_f) = dt1*(1-bound);
+umax(1, ui_f) = dt1*(1+bound);
+
+param.umin = umin;
+param.umax = umax;
 
 [score, x, u] = ddp_naive(q, x1, u, @F, @L, param);
 time = u(1, ui_f);

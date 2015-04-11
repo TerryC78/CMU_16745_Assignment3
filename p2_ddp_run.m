@@ -2,7 +2,14 @@
 plan = Parameters('plan001');
 
 %% preprocess input
-param = struct('k_u', 50, 'k_d', 1, 'rate', 1, 'utol', 1e-12, 'iter', 1e6);
+param = struct ...
+    ( 'k_u', 50 ...
+    , 'k_d', 1 ...
+    , 'rate', 1 ...
+    , 'utol', 1e-12 ...
+    , 'iter', 1e6 ...
+    , 'bound', 0.5 ...
+    );
 g_z = 9.8;
 n = 10; % # of subdivisions
 m = length(plan.time); % # of footsteps
@@ -18,14 +25,8 @@ x = vars.x;
 y = vars.y;
 u_x = vars.u_x;
 u_y = vars.u_y;
-
-%% timestep
-dts = zeros(nn, 1);
-for i = 1:m
-    j = (i-1)*nn;
-    dts(j+2:j+nn) = t(i);
-end
-ts = [0; cumsum(dts)];
+plan.time = t;
+[ts, dts] = p2_ddp_ts(t, n);
 
 %% plot
 % subplot(1, 2, 1);

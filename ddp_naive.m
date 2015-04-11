@@ -12,13 +12,24 @@ function [score, x, u] = ddp_naive(n, x1, u, F, L, param)
 %     i.e. value, gradient, hessian
 %
 % param :
-%   rate: learning rate (0 < rate <= 1)
-%   utol: terminate when |change of u(1)|^2 < utol
-%   iter: max # of iterations
+%   rate : learning rate (0 < rate <= 1)
+%   utol : terminate when |change of u(1)|^2 < utol
+%   iter : max # of iterations
+%   umin / umax : optional bound for u
 
 rate = param.rate;
 utol = param.utol;
 iter = param.iter;
+if isfield(param, 'umin')
+    umin = param.umin;
+else
+    umin = -Inf*ones(size(u));
+end
+if isfield(param, 'umax')
+    umax = param.umax;
+else
+    umax = +Inf*ones(size(u));
+end
 
 nx = size(x1, 1);
 % nu = size(u, 1);
@@ -85,7 +96,8 @@ for it = 1:iter
     % iterate forward to update x and u
     x_new = x1;
     for i = 1:n
-        u(:, i) = u(:, i) - rate_it*(du{i} + K{i}*(x_new - x(:, i)));
+        u_new = u(:, i) - rate_it*(du{i} + K{i}*(x_new - x(:, i)));
+        u(:, i) = min(max(u_new, umin(:, i)), umax(:, i));
         x(:, i) = x_new;
         x_new = F(i, x(:, i), u(:, i));
     end
