@@ -47,10 +47,10 @@ end
 
 opts = cmaes('defaults');
 t0 = plan.time;
-opts.LBound = t0*(1-bound);
-opts.UBound = t0*(1+bound);
+opts.LBounds = t0*(1-bound);
+opts.UBounds = t0*(1+bound);
 
-t = cmaes(@f, plan.time, t0*bound/3);
+t = cmaes(@f, plan.time, t0*bound, opts);
 plan.time = t;
 [score, vars] = p1_ddp(plan, g_z, n, param);
 vars.time = t;
