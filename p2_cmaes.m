@@ -46,6 +46,8 @@ function score = f(t)
 end
 
 opts = cmaes('defaults');
+opts.DispModulo = 10;
+opts.MaxIter = 2000;
 t0 = plan.time;
 opts.LBounds = t0*(1-bound);
 opts.UBounds = t0*(1+bound);
