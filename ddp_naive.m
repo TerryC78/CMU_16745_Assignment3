@@ -27,9 +27,9 @@ nx = size(x1, 1);
 x = zeros(nx, n+1);
 x(:, 1) = x1;
 x_new = x1;
-for i = 2:n+1
-    x_new = F(i, x_new, u(i-1));
-    x(:, i) = x_new;
+for i = 1:n
+    x_new = F(i, x_new, u(:, i));
+    x(:, i+1) = x_new;
 end
 
 function ret = VxFzz(Vx, Fzz)
@@ -85,7 +85,7 @@ for it = 1:iter
     % iterate forward to update x and u
     x_new = x1;
     for i = 1:n
-        u(i) = u(i) - rate_it*(du{i} + K{i}*(x_new - x(:, i)));
+        u(:, i) = u(:, i) - rate_it*(du{i} + K{i}*(x_new - x(:, i)));
         x(:, i) = x_new;
         x_new = F(i, x(:, i), u(:, i));
     end
