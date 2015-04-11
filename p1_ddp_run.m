@@ -21,8 +21,8 @@ plot ...
     , ts, p_x_u - [vars.u_x.';0], 'c-' ...
     , ts, vars.x, 'r-' ...
     );
-legend('foot', 'COP', 'COM', 'Location', 'SE');
-xlabel('Time (s)'); ylabel('Distance (m)');
+legend('Foot location', 'COP', 'COM', 'Location', 'SE');
+xlabel('Time'); ylabel('Distance (m)');
 title('Optimal trajectories in the X-axis');
 filename = './figures/optim_trajec_x.png';
 saveas(optim_trajec_x, filename);
@@ -30,13 +30,51 @@ saveas(optim_trajec_x, filename);
 optim_trajec_y = figure;
 plot ...
     ( ts, p_y_u, 'b-' ...
-    , ts, p_y_u - [vars.u_y.';0], 'c-' ...
+    , ts, p_y_u - [vars.u_y'; 0], 'c-' ...
     , ts, vars.y, 'r-' ...
     );
-legend('foot', 'COP', 'COM', 'Location', 'SE');
-xlabel('Time (s)'); ylabel('Distance (m)');
+legend('Foot location', 'COP', 'COM', 'Location', 'SE');
+xlabel('Time'); ylabel('Distance');
 title('Optimal trajectories in the Y-axis');
 filename = './figures/optim_trajec_y.png';
 saveas(optim_trajec_y, filename);
 
-% TODO: add more plots
+optim_trajec_xy = figure;
+plot(vars.x, vars.y, 'b-', plan.p_x, plan.p_y, 'r*');
+legend('COM', 'Foot location', 'Location', 'SE');
+xlabel('X'); ylabel('Y');
+title('Optimal COM trajectory in the XY plane');
+filename = './figures/optim_trajec_xy.png';
+saveas(optim_trajec_xy, filename);
+
+optim_xd = figure;
+plot ...
+    ( ts, vars.xd, 'b-' );
+xlabel('Time'); ylabel('Velocity');
+title('Optimal COM velocity in the X-axis');
+filename = './figures/optim_xd.png';
+saveas(optim_xd, filename);
+
+optim_yd = figure;
+plot ...
+    ( ts, vars.yd, 'b-' );
+xlabel('Time'); ylabel('Velocity');
+title('Optimal COM velocity in the Y-axis');
+filename = './figures/optim_yd.png';
+saveas(optim_yd, filename);
+
+optim_u_x = figure;
+plot( ts, [vars.u_x'; 0], 'b-' );
+xlabel('Time'); ylabel('Distance');
+title('Optimal COP offset trajectory in the X-axis');
+filename = './figures/optim_u_x.png';
+saveas(optim_u_x, filename);
+
+optim_u_y = figure;
+plot( ts, [vars.u_y'; 0], 'b-' );
+xlabel('Time'); ylabel('Distance');
+title('Optimal COP offset trajectory in the Y-axis');
+filename = './figures/optim_u_y.png';
+saveas(optim_u_y, filename);
+
+close all;
