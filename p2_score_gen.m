@@ -1,7 +1,6 @@
 function ff = p2_score_gen(p)
 
-function score = f(v)
-    
+function score = f(v)    
     ts = v.ts;
     dts = v.dts;
     
@@ -19,10 +18,7 @@ function score = f(v)
           + p.kdy*mean_sqr(v.yd) ...
           + p.kux*mean_sqr(v.u_x) ...
           + p.kuy*mean_sqr(v.u_y) ...
-          ;
-    
-    
-    
+          ;   
 end
 
 ff = f;
